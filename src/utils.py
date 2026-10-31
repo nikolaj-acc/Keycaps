@@ -27,7 +27,6 @@ class Logger:
 
     logging.basicConfig(
         filename=log_path,
-        filemode="w",
         format='%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d [%(filename)s])',
         datefmt='%d-%m-%Y %I:%M:%S %p',
         encoding="utf-8",
@@ -75,6 +74,7 @@ class Logger:
         Logger.success("Testing...")
 
 import time
+import os
 from functools import wraps
 
 class Util:
@@ -88,8 +88,21 @@ class Util:
             end_time = time.perf_counter()
 
             execution_time = end_time - start_time
-            print(f"Function '{func.__name__}' executed in {execution_time:.2f} seconds")
+            print(f"Function '\033[38;2;255;0;255m{func.__name__}\033[0m' executed in {execution_time:.2f} seconds")
+
+            logging.info(f"Function '{func.__name__}' executed in {execution_time:.2f} seconds")
 
             return result
 
         return wrapper
+
+    @staticmethod
+    def find_path(file_path):
+        if not os.path.exists(file_path):
+            Logger.error(f"File: '{file_path}' doesn't exist!")
+            return
+
+        if os.path.isfile(file_path):
+            Logger.success(f"File: '{file_path}' loaded")
+        elif os.path.isdir(file_path):
+            Logger.success(f"Directory: '{file_path}' loaded")

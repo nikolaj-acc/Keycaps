@@ -1,4 +1,4 @@
-INFO (31-10-2026 04:51:08 PM): [INFO] Testing... (Line: 55 [utils.py])
-WARNING (31-10-2026 04:51:08 PM): [WARNING] Testing... (Line: 60 [utils.py])
-ERROR (31-10-2026 04:51:08 PM): [ERROR] Testing... (Line: 65 [utils.py])
-INFO (31-10-2026 04:51:08 PM): [SUCCESS] Testing... (Line: 50 [utils.py])
+INFO (31-10-2026 08:20:29 PM): [SUCCESS] File: 'src/data/config.json' loaded (Line: 49 [utils.py])
+INFO (31-10-2026 08:20:48 PM): [SUCCESS] File: 'src/data/config.json' loaded (Line: 49 [utils.py])
+INFO (31-10-2026 08:23:58 PM): [SUCCESS] File: 'src/data/config.json' loaded (Line: 49 [utils.py])
+INFO (31-10-2026 08:23:58 PM): Function 'main' executed in 0.00 seconds (Line: 93 [utils.py])
