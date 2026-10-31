@@ -1,6 +1,9 @@
+import logging
+from pathlib import Path
+
 class Logger:
-    _RESET = "\003[0m"
-    _BOLD = "\003[1m"
+    _RESET = "\033[0m"
+    _BOLD = "\033[1m"
 
     _COLORS = {
         "amber":"\033[38;2;255;191;0m",
@@ -19,6 +22,18 @@ class Logger:
         "yellow":"\033[38;2;255;230;0m"
     }
 
+    log_path = Path(__file__).parent / "assets" / "docs" / "logging" / "keycap-logs.log"
+    log_path.parent.mkdir(parents=True,exist_ok=True)
+
+    logging.basicConfig(
+        filename=log_path,
+        filemode="w",
+        format='%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d [%(filename)s])',
+        datefmt='%d-%m-%Y %I:%M:%S %p',
+        encoding="utf-8",
+        level=logging.INFO,
+    )
+
     @classmethod
     def color_text(cls, text: str, color: str, bold: bool = False) -> str:
         color_code = cls._COLORS.get(color.lower(), "")
@@ -32,18 +47,32 @@ class Logger:
     @classmethod
     def success(cls,message: str):
         print(cls.color_text(f"[SUCCESS] {message}","chartreuse",bold=True))
+        logging.info(f"[SUCCESS] {message}")
 
     @classmethod
     def info(cls,message: str):
         print(cls.color_text(f"[INFO] {message}","teal"))
+        logging.info(f"[INFO] {message}")
 
     @classmethod
     def warning(cls,message: str):
         print(cls.color_text(f"[WARNING] {message}","amber",bold=True))
+        logging.warning(f"[WARNING] {message}")
 
     @classmethod
     def error(cls,message: str):
         print(cls.color_text(f"[ERROR] {message}","vermilion",bold=True))
+        logging.error(f"[ERROR] {message}")
+
+    @classmethod
+    def test(cls):
+        Logger.info("Testing...")
+        Logger.warning("Testing...")
+        Logger.error("Testing...")
+        print(Logger.color_text("Testing...","blue"))
+        print(Logger.color_text("Testing...","violet"))
+        print(Logger.color_text("Testing...","gray"))
+        Logger.success("Testing...")
 
 import time
 from functools import wraps
