@@ -1,6 +1,7 @@
 {
   "root": {
-    "name": "Keycaps",
-    "size": "393x852"
+    "title": "Keycaps",
+    "geometry": "300x600",
+    "appearance": "System"
   }
 }

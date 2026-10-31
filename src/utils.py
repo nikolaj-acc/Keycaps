@@ -22,16 +22,21 @@ class Logger:
         "yellow":"\033[38;2;255;230;0m"
     }
 
-    log_path = Path(__file__).parent / "assets" / "docs" / "logging" / "keycap-logs.log"
-    log_path.parent.mkdir(parents=True,exist_ok=True)
+    _log_path = Path(__file__).parent / "assets" / "docs" / "logging" / "keycap-logs.log"
+    _logger_configured = False
 
-    logging.basicConfig(
-        filename=log_path,
-        format='%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d [%(filename)s])',
-        datefmt='%d-%m-%Y %I:%M:%S %p',
-        encoding="utf-8",
-        level=logging.INFO,
-    )
+    @classmethod
+    def _ensure_logger_configured(cls):
+        if not cls._logger_configured:
+            cls._log_path.parent.mkdir(parents=True, exist_ok=True)
+            logging.basicConfig(
+                filename=cls._log_path,
+                format='%(levelname)s (%(asctime)s): %(message)s (Line: %(lineno)d [%(filename)s])',
+                datefmt='%d-%m-%Y %I:%M:%S %p',
+                encoding="utf-8",
+                level=logging.INFO,
+            )
+            cls._logger_configured = True
 
     @classmethod
     def color_text(cls, text: str, color: str, bold: bool = False) -> str:
@@ -45,33 +50,37 @@ class Logger:
 
     @classmethod
     def success(cls,message: str):
+        cls._ensure_logger_configured()
         print(cls.color_text(f"[SUCCESS] {message}","chartreuse",bold=True))
         logging.info(f"[SUCCESS] {message}")
 
     @classmethod
     def info(cls,message: str):
+        cls._ensure_logger_configured()
         print(cls.color_text(f"[INFO] {message}","teal"))
         logging.info(f"[INFO] {message}")
 
     @classmethod
     def warning(cls,message: str):
+        cls._ensure_logger_configured()
         print(cls.color_text(f"[WARNING] {message}","amber",bold=True))
         logging.warning(f"[WARNING] {message}")
 
     @classmethod
     def error(cls,message: str):
+        cls._ensure_logger_configured()
         print(cls.color_text(f"[ERROR] {message}","vermilion",bold=True))
         logging.error(f"[ERROR] {message}")
 
     @classmethod
     def test(cls):
-        Logger.info("Testing...")
-        Logger.warning("Testing...")
-        Logger.error("Testing...")
-        print(Logger.color_text("Testing...","blue"))
-        print(Logger.color_text("Testing...","violet"))
-        print(Logger.color_text("Testing...","gray"))
-        Logger.success("Testing...")
+        cls.info("Testing...")
+        cls.warning("Testing...")
+        cls.error("Testing...")
+        print(cls.color_text("Testing...","blue"))
+        print(cls.color_text("Testing...","violet"))
+        print(cls.color_text("Testing...","gray"))
+        cls.success("Testing...")
 
 import time
 import os
@@ -100,9 +109,10 @@ class Util:
     def find_path(file_path):
         if not os.path.exists(file_path):
             Logger.error(f"File: '{file_path}' doesn't exist!")
-            return
+            return False
 
         if os.path.isfile(file_path):
             Logger.success(f"File: '{file_path}' loaded")
         elif os.path.isdir(file_path):
             Logger.success(f"Directory: '{file_path}' loaded")
+        return True
